@@ -1,0 +1,18 @@
+// Copyright Frytinhas UE Market 2024. All rights reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Engine/DataAsset.h"
+#include "FriesLibraryTypes.h"
+#include "OverallScalability.generated.h"
+
+UCLASS()
+class FRIESLIBRARY_API UOverallScalability : public UPrimaryDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Data")
+	FAllScalabilitys ScalabilityInfo;
+};

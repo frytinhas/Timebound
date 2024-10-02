@@ -1,0 +1,17 @@
+Binaries
+Builds
+DerivedDataCache
+Intermediate
+Saved
+.vscode
+.vs
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.suo
+*.xcodeproj
+*.xcworkspace
+Past_BuiltData.uasset
+Future_BuiltData.uasset

@@ -1,0 +1,26 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "FriesLibrary",
+	"Description": "This plugin contains some useful things to facilitate the development of your project, saving time and adding some adjustments.",
+	"Category": "Code Plugins",
+	"CreatedBy": "Frytinhas",
+	"CreatedByURL": "",
+	"DocsURL": "https://frytinhass-organization.gitbook.io/fries-library/",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/d886479b376a45f4b730d4d978f3f22d",
+	"SupportURL": "https://discord.gg/tkanwepmUW",
+	"EngineVersion": "5.4.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "FriesLibrary",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}

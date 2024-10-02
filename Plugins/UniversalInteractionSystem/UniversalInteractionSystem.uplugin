@@ -1,0 +1,26 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Universal Interaction System",
+	"Description": "UIS is a replicated Interaction System that you can implement in anything you want in a simple way.",
+	"Category": "Marketplace",
+	"CreatedBy": "Frytinhas",
+	"CreatedByURL": "",
+	"DocsURL": "https://frytinhass-organization.gitbook.io/universal-interaction-system",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/2ba0d875a4d24de78e785eaf2b071477",
+	"SupportURL": "https://discord.gg/vkJvJRBe7H",
+	"EngineVersion": "5.4.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "UniversalInteractionSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}
