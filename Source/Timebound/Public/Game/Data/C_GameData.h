@@ -13,13 +13,13 @@ struct FCutsceneInfo
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite)
-	UMovieSceneSequencePlayer* LevelSequence;
+	UMovieSceneSequencePlayer* LevelSequence = nullptr;
 	
 	UPROPERTY(BlueprintReadWrite)
-	APawn* Player;
+	APawn* Player = nullptr;
 
 	UPROPERTY(BlueprintReadWrite, DisplayName = "View Target")
-	AActor* CutsceneCamera;
+	AActor* CutsceneCamera = nullptr;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bAutoDestroyCameraOnFinish = true;
@@ -32,6 +32,21 @@ struct FCutsceneInfo
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bHideHUD = true;
+};
+
+USTRUCT(Blueprintable, BlueprintType)
+struct FGameInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, Category = "Future")
+	bool bControlGateUnlocked = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Future")
+	bool bPhoneBoothUnlocked = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Future")
+	bool bFloorOpened = false;
 };
 
 UCLASS()

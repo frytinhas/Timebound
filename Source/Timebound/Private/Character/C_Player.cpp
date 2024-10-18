@@ -15,6 +15,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/HUD.h"
+#include "Items/C_ItemsInterface.h"
+#include "Logging/StructuredLog.h"
 
 // Sets default values
 AC_Player::AC_Player()
@@ -128,16 +130,17 @@ void AC_Player::GetStartLocationAndEndLocation_Implementation(FVector& StartLoca
 
 void AC_Player::IsWalking()
 {
-	if (GetCharacterMovement()->IsWalking() && GetVelocity().Length() >= 300.0f)
+	if (GetCharacterMovement()->IsMovingOnGround() && GetVelocity().Length() >= 300.0f)
 	{
 		const TArray<AActor*> ActorsToIgnore = {this};
 		FHitResult HitResult;
-		UKismetSystemLibrary::LineTraceSingle(this, GetActorLocation(), GetActorLocation() - GetActorUpVector() * 95.0f, TraceTypeQuery1, false, ActorsToIgnore,
+		UKismetSystemLibrary::LineTraceSingle(this, GetActorLocation(), GetActorLocation() - GetActorUpVector() * 145.0f, TraceTypeQuery1, false, ActorsToIgnore,
 			EDrawDebugTrace::None, HitResult, true);
 		if (UPhysicalMaterial* PhysMaterial = HitResult.PhysMaterial.Get())
 		{
 			switch (PhysMaterial->SurfaceType)
 			{
+				UE_LOGFMT(LogTemp, Display, "SurfaceType{0}", PhysMaterial->SurfaceType.GetValue());
 				case SurfaceType1:
 					if (!FootstepSounds[0]) {return;}
 					UGameplayStatics::PlaySoundAtLocation(this, FootstepSounds[0], GetActorLocation(), GetActorRotation());
@@ -158,18 +161,21 @@ void AC_Player::IsWalking()
 		}
 		else
 		{
+			UE_LOGFMT(LogTemp, Warning, "Dont found surface type");
 			if (!FootstepSounds[0]) {return;}
 			UGameplayStatics::PlaySoundAtLocation(this, FootstepSounds[0], GetActorLocation(), GetActorRotation());
 		}
 	}
-	GetWorldTimerManager().SetTimer(FootstepTimerHandle, this, &AC_Player::IsWalking, bIsCrouched ? 0.5f : 0.3f, false);
+	GetWorldTimerManager().SetTimer(FootstepTimerHandle, this, &AC_Player::IsWalking, bIsCrouched ? 0.54f : 0.3f, false);
 }
 
 void AC_Player::UpdateInsuredItem(AActor* NewInsuredItem, const bool bDefineInsteadAddOffset, const FTransform& Offset)
 {
 	if (IsValid(InsuredItem))
 	{
-		InsuredItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		InsuredItem->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld,
+			EDetachmentRule::KeepRelative, true));
+		InsuredItem->SetActorScale3D(InsuredItemInitialScale);
 		
 		if (UMeshComponent* ItemMesh = Cast<UMeshComponent>(InsuredItem->GetRootComponent()))
 		{
@@ -182,15 +188,22 @@ void AC_Player::UpdateInsuredItem(AActor* NewInsuredItem, const bool bDefineInst
 		{
 			Interactable->bCanInteract = true;
 		}
+
+		if (InsuredItem->GetClass()->ImplementsInterface(UC_ItemsInterface::StaticClass()))
+		{
+			IC_ItemsInterface::Execute_OnDropItem(InsuredItem, this);
+		}
 	}
 
 	if (NewInsuredItem == InsuredItem || !NewInsuredItem)
 	{
 		InsuredItem = nullptr;
+		InsuredItemInitialScale = FVector::Zero();
 		return;
 	}
 	
 	InsuredItem = NewInsuredItem;
+	InsuredItemInitialScale = InsuredItem->GetActorScale3D();
 	if (UMeshComponent* ItemMesh = Cast<UMeshComponent>(InsuredItem->GetRootComponent()))
 	{
 		ItemMesh->SetCastShadow(false);
@@ -207,6 +220,11 @@ void AC_Player::UpdateInsuredItem(AActor* NewInsuredItem, const bool bDefineInst
 	else
 	{
 		InsuredItem->AddActorLocalTransform(Offset);
+	}
+	
+	if (InsuredItem->GetClass()->ImplementsInterface(UC_ItemsInterface::StaticClass()))
+	{
+		IC_ItemsInterface::Execute_OnPickupItem(InsuredItem, this);
 	}
 }
 
@@ -234,7 +252,7 @@ void AC_Player::OnReceiveAnyDamage(AActor* DamagedActor, float Damage, const UDa
 		
 		GetWorldTimerManager().SetTimer(DeathTimerHandle, [this]
 		{
-			UKismetSystemLibrary::ExecuteConsoleCommand(this, "RestartLevel");
+			UGameplayStatics::OpenLevel(this, "Past");
 		}, 3.0f, false);
 	}
 }

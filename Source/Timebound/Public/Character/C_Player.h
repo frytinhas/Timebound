@@ -58,6 +58,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Info")
 	bool bPendingDeath = false;
 
+private:
+	FVector InsuredItemInitialScale;
+
 #pragma endregion Variables
 	
 #pragma region Functions

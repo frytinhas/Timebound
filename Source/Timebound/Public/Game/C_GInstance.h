@@ -16,8 +16,11 @@ class TIMEBOUND_API UC_GInstance : public UGameInstance
 
 private:
 	FCutsceneInfo CurrentCutsceneInfo;
-	
+
 public:
+	UPROPERTY(BlueprintReadWrite)
+	FGameInfo GameInfo;
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnFinishCurrentCutscene OnFinishCurrentCutscene;
 	
